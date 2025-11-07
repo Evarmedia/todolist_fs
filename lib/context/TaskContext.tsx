@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { decryptData, encryptData } from '../utils/crypto';
 
 export interface Task {
   id: string;
@@ -24,15 +25,27 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const storedTasks = localStorage.getItem('tasks');
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
+    try {
+      const storedTasks = localStorage.getItem('tasks');
+      if (storedTasks) {
+        const decryptedTasks = decryptData(storedTasks);
+        if (decryptedTasks) {
+          setTasks(decryptedTasks);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading tasks:', error);
     }
   }, []);
 
   useEffect(() => {
     if (tasks.length > 0) {
-      localStorage.setItem('tasks', JSON.stringify(tasks));
+      try {
+        const encryptedTasks = encryptData(tasks);
+        localStorage.setItem('tasks', encryptedTasks);
+      } catch (error) {
+        console.error('Error saving tasks:', error);
+      }
     }
   }, [tasks]);
 

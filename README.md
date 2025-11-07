@@ -86,7 +86,21 @@ todolist_fs/
 
 ## Data Persistence
 
-The application uses browser localStorage temporarily for data persistence. Tasks are automatically saved and retrieved from localStorage, ensuring your tasks remain available between sessions.
+The application uses browser localStorage for data persistence with encryption. All data stored in localStorage is encrypted using AES encryption to ensure security. Tasks are automatically encrypted before saving and decrypted when retrieved from localStorage.
+
+### Environment Setup
+
+1. Copy the `.env.example` file to `.env`:
+```bash
+cp .env.example .env
+```
+
+2. Generate a secure 32-character encryption key and replace the placeholder in `.env`:
+```
+NEXT_PUBLIC_ENCRYPTION_KEY="your-secure-32-character-key-here"
+```
+
+**Important**: Never commit your `.env` file or share your encryption key. Without the correct encryption key, stored data cannot be decrypted.
 
 ## Contributing
 
