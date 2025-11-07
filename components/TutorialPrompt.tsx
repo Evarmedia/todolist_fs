@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import { ChevronRight, Lightbulb } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useTasks } from '../lib/context/TaskContext';
 
 interface TutorialPromptProps {
   isVisible: boolean;
@@ -9,6 +10,7 @@ interface TutorialPromptProps {
 }
 
 export function TutorialPrompt({ isVisible, onDismiss }: TutorialPromptProps) {
+  const { tasks } = useTasks();
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
@@ -23,6 +25,8 @@ export function TutorialPrompt({ isVisible, onDismiss }: TutorialPromptProps) {
       onDismiss();
     }, 200);
   };
+
+  if (tasks && tasks.length > 0) return null;
 
   if (!isVisible && !isAnimating) return null;
 
